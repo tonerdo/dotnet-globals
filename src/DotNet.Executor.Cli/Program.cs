@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.CommandLineUtils;
 
-namespace DotNet.Exec.Cli
+namespace DotNet.Executor.Cli
 {
     class Program
     {
