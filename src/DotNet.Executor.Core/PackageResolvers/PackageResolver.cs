@@ -3,7 +3,7 @@ namespace DotNet.Executor.Core.PackageResolvers
     using System;
     using System.IO;
 
-    abstract class PackageResolver
+    internal abstract class PackageResolver
     {
         protected DirectoryInfo PackagesFolder { get; set; }
         protected DirectoryInfo PackageFolder { get; set; }
