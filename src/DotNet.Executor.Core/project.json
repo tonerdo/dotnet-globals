@@ -3,7 +3,10 @@
   "buildOptions": {
     "debugType": "portable"
   },
-  "dependencies": {},
+  "dependencies": {
+      "System.Diagnostics.Process": "4.1.0",
+      "Newtonsoft.Json": "9.0.1"
+  },
   "frameworks": {
     "netstandard1.6": {
       "dependencies": {
