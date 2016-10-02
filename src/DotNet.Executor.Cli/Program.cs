@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.CommandLineUtils;
+using DotNet.Executor.Core;
 
 namespace DotNet.Executor.Cli
 {
@@ -7,6 +8,7 @@ namespace DotNet.Executor.Cli
     {
         public static int Main(string[] args)
         {
+            PackageOperations packageOperations = PackageOperations.GetInstance();
             var app = new CommandLineApplication();
             app.Name = "dotnet exec";
             app.FullName = ".NET Executor";
@@ -32,7 +34,16 @@ namespace DotNet.Executor.Cli
                         return 1;
                     }
 
-                    return 0;
+                    try
+                    {
+                        packageOperations.Install(packageArgument.Value);
+                        return 0;
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Console.Error.WriteLine(ex.Message);
+                        return 1;
+                    }
                 });
             });
 
