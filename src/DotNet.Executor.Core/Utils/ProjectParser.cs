@@ -4,7 +4,7 @@ namespace DotNet.Executor.Core.Utils
     using System;
     using System.IO;
 
-    class ProjectParser
+    internal class ProjectParser
     {
         public static string GetPackageName(FileInfo projectJson)
         {

@@ -2,7 +2,7 @@ namespace DotNet.Executor.Core.Utils
 {
     using System.Diagnostics;
 
-    class ProcessRunner
+    internal class ProcessRunner
     {
         public static bool RunProcess(string processName, params string[] arguments)
         {
