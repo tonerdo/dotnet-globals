@@ -30,9 +30,10 @@ namespace DotNet.Executor.Core
 
         public void Install(string package)
         {
-            if (package.StartsWith("http"))
+            if (package.StartsWith("http") || package.StartsWith("git@"))
             {
-                // TODO: Git repo
+                GitPackageResolver gitPackageResolver = new GitPackageResolver(this.PackagesFolder, package);
+                gitPackageResolver.Resolve();
             }
             else if (!package.Contains("/") && package.Length > 2)
             {

@@ -26,7 +26,7 @@ namespace DotNet.Executor.Core.PackageResolvers
 
             this.PackageFolder = this.PackagesFolder.GetDirectories().FirstOrDefault(d => d.Name == packageName);
             if (this.PackageFolder != null)
-                throw new Exception("Package already exists");
+                throw new Exception("A package with the same name already exists");
 
             this.PackageFolder = this.PackagesFolder.CreateSubdirectory(packageName);
             bool build = ProcessRunner.RunProcess("dotnet", "build", projectJson.FullName,
