@@ -5,13 +5,13 @@ namespace DotNet.Executor.Core.Utils
 
     internal class PackageRemover
     {
-        public static void RemoveFolder(DirectoryInfo directory)
+        public static void RemoveFolder(DirectoryInfo folder)
         {
-            var files = directory.GetFiles();
-            var directories = directory.GetDirectories();
+            var files = folder.GetFiles();
+            var directories = folder.GetDirectories();
             files.ToList().ForEach(f => f.Delete());
             directories.ToList().ForEach(d => RemoveFolder(d));
-            directory.Delete();
+            folder.Delete();
         }
     }
 }
