@@ -104,6 +104,9 @@ namespace DotNet.Executor.Cli
                 });
             });
 
+            if (args.Length == 0)
+                app.ShowHelp();
+
             try
             {
                 return app.Execute(args);
