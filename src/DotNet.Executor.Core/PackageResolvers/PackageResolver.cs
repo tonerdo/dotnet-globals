@@ -8,13 +8,15 @@ namespace DotNet.Executor.Core.PackageResolvers
         protected DirectoryInfo PackagesFolder { get; set; }
         protected DirectoryInfo PackageFolder { get; set; }
         protected string Source { get; set; }
+        protected Options Options { get; set; }
 
         abstract protected void Acquire();
 
-        protected PackageResolver(DirectoryInfo packagesFolder, string source)
+        protected PackageResolver(DirectoryInfo packagesFolder, string source, Options options)
         {
             this.PackagesFolder = packagesFolder;
             this.Source = source;
+            this.Options = options;
         }
 
         public Package Resolve()

@@ -28,11 +28,11 @@ namespace DotNet.Executor.Core
             return new PackageOperations(packagesFolder);
         }
 
-        public void Install(string package)
+        public void Install(string package, Options options)
         {
             if (package.StartsWith("http") || package.StartsWith("git@"))
             {
-                GitPackageResolver gitPackageResolver = new GitPackageResolver(this.PackagesFolder, package);
+                GitPackageResolver gitPackageResolver = new GitPackageResolver(this.PackagesFolder, package, options);
                 gitPackageResolver.Resolve();
             }
             else if (!package.Contains("/") && package.Length > 2)
@@ -41,7 +41,7 @@ namespace DotNet.Executor.Core
             }
             else
             {
-                FolderPackageResolver folderPackageResolver = new FolderPackageResolver(this.PackagesFolder, Path.GetFullPath(package));
+                FolderPackageResolver folderPackageResolver = new FolderPackageResolver(this.PackagesFolder, Path.GetFullPath(package), options);
                 folderPackageResolver.Resolve();
             }
         }

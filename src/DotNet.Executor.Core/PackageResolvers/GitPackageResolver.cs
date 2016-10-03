@@ -7,7 +7,7 @@ namespace DotNet.Executor.Core.PackageResolvers
 {
     internal class GitPackageResolver : FolderPackageResolver
     {
-        public GitPackageResolver(DirectoryInfo packagesFolder, string source) : base(packagesFolder, source) { }
+        public GitPackageResolver(DirectoryInfo packagesFolder, string source, Options options) : base(packagesFolder, source, options) { }
 
         protected override void Acquire()
         {
@@ -20,7 +20,9 @@ namespace DotNet.Executor.Core.PackageResolvers
             if (!clone)
                 throw new Exception("Unable to clone repository");
 
-            this.Source = tempFolder.FullName;
+            this.Source = string.IsNullOrEmpty(this.Options.Folder) ? 
+                tempFolder.FullName : Path.Combine(tempFolder.FullName, this.Options.Folder);
+
             base.Acquire();
         }
     }

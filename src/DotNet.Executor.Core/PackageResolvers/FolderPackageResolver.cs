@@ -8,7 +8,7 @@ namespace DotNet.Executor.Core.PackageResolvers
     internal class FolderPackageResolver : PackageResolver
     {
 
-        public FolderPackageResolver(DirectoryInfo packagesFolder, string source) : base(packagesFolder, source) { }
+        public FolderPackageResolver(DirectoryInfo packagesFolder, string source, Options options) : base(packagesFolder, source, options) { }
 
         protected override void Acquire()
         {
