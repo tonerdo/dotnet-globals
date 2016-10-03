@@ -62,7 +62,17 @@ namespace DotNet.Executor.Cli
                         return 1;
                     }
 
-                    return 0;
+                    try
+                    {
+                        packageOperations.Uninstall(packageArgument.Value);
+                        Console.WriteLine("Package removed successfully");
+                        return 0;
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Console.Error.WriteLine(ex.Message);
+                        return 1;
+                    }
                 });
             });
 

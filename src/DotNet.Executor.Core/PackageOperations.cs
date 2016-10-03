@@ -1,8 +1,10 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
 using DotNet.Executor.Core.PackageResolvers;
+using DotNet.Executor.Core.Utils;
 
 namespace DotNet.Executor.Core
 {
@@ -46,6 +48,15 @@ namespace DotNet.Executor.Core
         public string[] List()
         {
             return this.PackagesFolder.EnumerateDirectories().Select(d => d.Name).ToArray();
+        }
+
+        public void Uninstall(string package)
+        {
+            var packageFolder = this.PackagesFolder.GetDirectories().FirstOrDefault(d => d.Name == package);
+            if (packageFolder == null)
+                throw new Exception("Packge does not exist");
+
+            PackageRemover.RemoveFolder(packageFolder);
         }
     }
 }
