@@ -91,6 +91,15 @@ namespace DotNet.Executor.Cli
 
                 c.OnExecute(() =>
                 {
+                    string[] packages = packageOperations.List();
+                    Console.WriteLine(packageOperations.PackagesFolder.FullName);
+
+                    if (packages.Length == 0)
+                        Console.WriteLine("No packages installed");
+                    else
+                        foreach (string package in packages)
+                            Console.WriteLine("|-- {0}", package);
+
                     return 0;
                 });
             });

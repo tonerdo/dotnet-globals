@@ -1,6 +1,8 @@
-using DotNet.Executor.Core.PackageResolvers;
-using System.Reflection;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+
+using DotNet.Executor.Core.PackageResolvers;
 
 namespace DotNet.Executor.Core
 {
@@ -39,6 +41,11 @@ namespace DotNet.Executor.Core
                 FolderPackageResolver folderPackageResolver = new FolderPackageResolver(this.PackagesFolder, Path.GetFullPath(package));
                 folderPackageResolver.Resolve();
             }
+        }
+
+        public string[] List()
+        {
+            return this.PackagesFolder.EnumerateDirectories().Select(d => d.Name).ToArray();
         }
     }
 }
