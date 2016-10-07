@@ -30,7 +30,7 @@ namespace DotNet.Globals.Core
 
         public void Install(string package, Options options)
         {
-            if (package.StartsWith("http") || package.StartsWith("git@"))
+            if (package.StartsWith("http") || package.StartsWith("git"))
             {
                 GitPackageResolver gitPackageResolver = new GitPackageResolver(this.PackagesFolder, package, options);
                 gitPackageResolver.Resolve();
