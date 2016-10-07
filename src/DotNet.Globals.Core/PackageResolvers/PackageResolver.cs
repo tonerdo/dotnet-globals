@@ -1,4 +1,4 @@
-namespace DotNet.Executor.Core.PackageResolvers
+namespace DotNet.Globals.Core.PackageResolvers
 {
     using System;
     using System.IO;

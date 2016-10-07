@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Linq;
-using DotNet.Executor.Core.Utils;
+using DotNet.Globals.Core.Utils;
 
-namespace DotNet.Executor.Core.PackageResolvers
+namespace DotNet.Globals.Core.PackageResolvers
 {
     internal class FolderPackageResolver : PackageResolver
     {

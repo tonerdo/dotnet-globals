@@ -3,10 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-using DotNet.Executor.Core.PackageResolvers;
-using DotNet.Executor.Core.Utils;
+using DotNet.Globals.Core.PackageResolvers;
+using DotNet.Globals.Core.Utils;
 
-namespace DotNet.Executor.Core
+namespace DotNet.Globals.Core
 {
     public class PackageOperations
     {

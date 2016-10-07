@@ -1,4 +1,4 @@
-namespace DotNet.Executor.Core.Utils
+namespace DotNet.Globals.Core.Utils
 {
     using System.IO;
     using System.Linq;

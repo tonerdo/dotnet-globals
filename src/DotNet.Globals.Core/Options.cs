@@ -1,4 +1,4 @@
-namespace DotNet.Executor.Core
+namespace DotNet.Globals.Core
 {
     public class Options
     {

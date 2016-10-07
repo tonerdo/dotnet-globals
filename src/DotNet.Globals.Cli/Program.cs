@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Extensions.CommandLineUtils;
-using DotNet.Executor.Core;
+using DotNet.Globals.Core;
 
-namespace DotNet.Executor.Cli
+namespace DotNet.Globals.Cli
 {
     class Program
     {
@@ -10,8 +10,8 @@ namespace DotNet.Executor.Cli
         {
             PackageOperations packageOperations = PackageOperations.GetInstance();
             var app = new CommandLineApplication();
-            app.Name = "dotnet exec";
-            app.FullName = ".NET Executor";
+            app.Name = "dotnet globals";
+            app.FullName = ".NET Core Globals";
             app.Description = "Install and use command line tools built on .NET Core";
             app.HelpOption("-h|--help");
             app.VersionOption("-v|--version", "1.0.0");

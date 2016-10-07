@@ -1,1 +1,1 @@
-# dotnet-exec
+# dotnet-globals

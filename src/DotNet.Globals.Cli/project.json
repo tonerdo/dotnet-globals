@@ -6,7 +6,7 @@
   },
   "dependencies": {
       "Microsoft.Extensions.CommandLineUtils": "1.0.0",
-      "DotNet.Executor.Core": {
+      "DotNet.Globals.Core": {
           "target": "project",
           "version": "1.0.0-*"
       }
