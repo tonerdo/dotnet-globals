@@ -35,7 +35,7 @@ namespace DotNet.Globals.Core
                 GitPackageResolver gitPackageResolver = new GitPackageResolver(this.PackagesFolder, package, options);
                 gitPackageResolver.Resolve();
             }
-            else if (!package.Contains("/") && package.Length > 2)
+            else if (!package.Contains("/") && !package.Contains(@"\"))
             {
                 // TODO: Nuget package
             }
