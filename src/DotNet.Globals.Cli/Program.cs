@@ -24,7 +24,7 @@ namespace DotNet.Globals.Cli
                 var packageArgument = c.Argument("<PACKAGE>",
                     "The package to install. Can be a NuGet package, a git repo or folder path of a .NET Core project");
 
-                var sourceOption = c.Option("-s|--source", "Specifies a NuGet package source", CommandOptionType.MultipleValue);
+                var sourceOption = c.Option("-s|--source", "Specifies a NuGet package source", CommandOptionType.SingleValue);
                 var folderOption = c.Option("--folder", "Specifies project folder relative from root of git repo", CommandOptionType.SingleValue);
 
                 c.OnExecute(() =>
