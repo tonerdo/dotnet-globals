@@ -13,7 +13,7 @@ namespace DotNet.Globals.Core.PackageResolvers
         {
             var packageName = this.Source.Split('/').Last().Replace(".git", "");
             DirectoryInfo tempFolder = new DirectoryInfo(Path.GetTempPath())
-                .CreateSubdirectory("dotnet-exec-" + Guid.NewGuid().ToString())
+                .CreateSubdirectory("dotnet-globals-" + Guid.NewGuid().ToString())
                 .CreateSubdirectory(packageName);
 
             bool clone = ProcessRunner.RunProcess("git", "clone", this.Source, tempFolder.FullName);
