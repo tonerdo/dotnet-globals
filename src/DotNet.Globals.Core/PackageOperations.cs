@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 using DotNet.Globals.Core.PackageResolvers;
 using DotNet.Globals.Core.Utils;
 
+using Newtonsoft.Json;
+
 namespace DotNet.Globals.Core
 {
     public class PackageOperations
@@ -78,7 +80,10 @@ namespace DotNet.Globals.Core
             if (packageFolder == null)
                 throw new Exception("Packge does not exist");
 
+            Package p = JsonConvert.DeserializeObject<Package>(File.ReadAllText(Path.Combine(packageFolder.FullName, "globals.json")));
+            string executablePath = GetExecutablePath(p);
             PackageRemover.RemoveFolder(packageFolder);
+            File.Delete(executablePath);
         }
 
         private string GetExecutablePath(Package package)
