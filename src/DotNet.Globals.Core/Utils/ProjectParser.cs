@@ -6,7 +6,7 @@ namespace DotNet.Globals.Core.Utils
 
     internal class ProjectParser
     {
-        public static string GetPackageName(FileInfo projectJson)
+        public static string GetEntryAssemblyName(FileInfo projectJson)
         {
             JObject projectObject = JObject.Parse(File.ReadAllText(projectJson.FullName));
             JToken buildOptions;

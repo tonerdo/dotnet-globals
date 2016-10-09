@@ -97,7 +97,9 @@ namespace DotNet.Globals.Core.PackageResolvers
             DirectoryInfo nugetPackageAssembliesFolder = GetNuGetPackageAssembliesFolder(packageIdentity);
             FileInfo entryAssemblyFile = GetEntryAssemblyFile(nugetPackageAssembliesFolder);
 
-            string packageName = Path.GetFileNameWithoutExtension(entryAssemblyFile.FullName);
+            this.Package.EntryAssemblyFileName = Path.GetFileName(entryAssemblyFile.FullName);
+            string packageName = this.Source;
+
             this.PackageFolder = this.PackagesFolder.GetDirectories().FirstOrDefault(d => d.Name == packageName);
             if (this.PackageFolder != null)
                 throw new Exception("A package with the same name already exists");

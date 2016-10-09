@@ -2,6 +2,8 @@ namespace DotNet.Globals.Core.PackageResolvers
 {
     using System;
     using System.IO;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     internal abstract class PackageResolver
     {
@@ -9,6 +11,7 @@ namespace DotNet.Globals.Core.PackageResolvers
         protected DirectoryInfo PackageFolder { get; set; }
         protected string Source { get; set; }
         protected Options Options { get; set; }
+        protected Package Package { get; set; } = new Package();
 
         abstract protected void Acquire();
 
@@ -17,6 +20,9 @@ namespace DotNet.Globals.Core.PackageResolvers
             this.PackagesFolder = packagesFolder;
             this.Source = source;
             this.Options = options;
+
+            this.Package.Options = options;
+            this.Package.Source = source;
         }
 
         public Package Resolve()
@@ -26,10 +32,16 @@ namespace DotNet.Globals.Core.PackageResolvers
             if (this.PackageFolder == null)
                 throw new Exception("PackageFolder property not set");
             
+            if (this.Package.EntryAssemblyFileName == null)
+                throw new Exception("Entry assembly filename not set");
+
             if (this.PackagesFolder.FullName != this.PackageFolder.Parent.FullName)
                 throw new Exception("Package folder not in specified packages folder");
 
-            return new Package() { Directory = this.PackageFolder, EntryAssemblyFileName = this.PackageFolder.Name + ".dll" };
+            File.AppendAllText(Path.Combine(this.PackageFolder.FullName, "globals.json"), 
+                JObject.Parse(JsonConvert.SerializeObject(this.Package)).ToString());
+
+            return this.Package;
         }
     }
 }

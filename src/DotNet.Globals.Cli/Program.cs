@@ -37,13 +37,10 @@ namespace DotNet.Globals.Cli
 
                     try
                     {
-                        string[] packageNameParts = packageArgument.Value.Split('@');
-                        string packageName = packageNameParts[0];
-                        packageOperations.Install(packageName, new Options()
+                        packageOperations.Install(packageArgument.Value, new Options()
                         {
                             Folder = folderOption.Value(),
-                            NuGetPackageSource = sourceOption.HasValue() ? sourceOption.Value() : "https://api.nuget.org/v3/index.json",
-                            Version = packageNameParts.Length > 1 ? packageNameParts[1] : null
+                            NuGetPackageSource = sourceOption.HasValue() ? sourceOption.Value() : "https://api.nuget.org/v3/index.json"
                         });
                         return 0;
                     }

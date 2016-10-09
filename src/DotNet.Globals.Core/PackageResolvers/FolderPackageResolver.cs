@@ -22,7 +22,8 @@ namespace DotNet.Globals.Core.PackageResolvers
             if (!restore)
                 throw new Exception("Package restore for project failed");
 
-            string packageName = ProjectParser.GetPackageName(projectJson);
+            this.Package.EntryAssemblyFileName = $"{ProjectParser.GetEntryAssemblyName(projectJson)}.dll";
+            string packageName = sourceFolder.Name;
 
             this.PackageFolder = this.PackagesFolder.GetDirectories().FirstOrDefault(d => d.Name == packageName);
             if (this.PackageFolder != null)

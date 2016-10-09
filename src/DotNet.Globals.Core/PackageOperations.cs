@@ -37,6 +37,12 @@ namespace DotNet.Globals.Core
             }
             else if (!package.Contains("/") && !package.Contains(@"\"))
             {
+                string[] packageParts = package.Split('@');
+                package = packageParts[0];
+
+                if (packageParts.Length > 1)
+                    options.Version = packageParts[1];
+
                 NugetPackageResolver nugetPackageResolver = new NugetPackageResolver(this.PackagesFolder, package, options);
                 nugetPackageResolver.Resolve();
             }
