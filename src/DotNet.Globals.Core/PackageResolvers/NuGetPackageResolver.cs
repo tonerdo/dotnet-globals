@@ -110,7 +110,7 @@ namespace DotNet.Globals.Core.PackageResolvers
             }
         }
 
-        public class Logger : ILogger
+        private class Logger : ILogger
         {
             public void LogDebug(string data) => Console.WriteLine($"DEBUG: {data}");
             public void LogVerbose(string data) => Console.WriteLine($"VERBOSE: {data}");
