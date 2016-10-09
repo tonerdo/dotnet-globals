@@ -32,7 +32,7 @@ namespace DotNet.Globals.Core.PackageResolvers
             bool build = ProcessRunner.RunProcess("dotnet", "build", projectJson.FullName,
                 "-c Release", "-f netcoreapp1.0", "-o " + this.PackageFolder.FullName);
             if (!build)
-                throw new Exception("Project Compilation failed");
+                throw new Exception("Project compilation failed");
         }
     }
 }
