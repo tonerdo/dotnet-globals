@@ -63,6 +63,8 @@ namespace DotNet.Globals.Core
 
             string executablePath = GetExecutablePath(package);
             File.WriteAllText(executablePath, $"dotnet {Path.Combine(package.Folder.FullName, package.EntryAssemblyFileName)}");
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                ProcessRunner.RunProcess("chmod", "+x", executablePath);
         }
 
         public string[] List()
