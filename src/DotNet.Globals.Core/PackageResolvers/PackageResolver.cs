@@ -38,6 +38,8 @@ namespace DotNet.Globals.Core.PackageResolvers
             if (this.PackagesFolder.FullName != this.PackageFolder.Parent.FullName)
                 throw new Exception("Package folder not in specified packages folder");
 
+            this.Package.Folder = this.PackageFolder;
+
             File.AppendAllText(Path.Combine(this.PackageFolder.FullName, "globals.json"), 
                 JObject.Parse(JsonConvert.SerializeObject(this.Package)).ToString());
 

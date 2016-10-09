@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 using DotNet.Globals.Core.PackageResolvers;
 using DotNet.Globals.Core.Utils;
@@ -11,46 +12,57 @@ namespace DotNet.Globals.Core
     public class PackageOperations
     {
         public DirectoryInfo PackagesFolder { get; }
+        public DirectoryInfo BinFolder { get; }
 
-        private PackageOperations(string packagesFolder)
+        private PackageOperations(string packagesFolder, string binFolder)
         {
             Assembly asm = Assembly.GetEntryAssembly();
             packagesFolder = Path.Combine(Path.GetDirectoryName(asm.Location), packagesFolder);
+            binFolder = Path.Combine(Path.GetDirectoryName(asm.Location), binFolder);
 
             if (!Directory.Exists(packagesFolder))
                 Directory.CreateDirectory(packagesFolder);
 
+            if (!Directory.Exists(binFolder))
+                Directory.CreateDirectory(binFolder);
+
             this.PackagesFolder = new DirectoryInfo(packagesFolder);
+            this.BinFolder = new DirectoryInfo(binFolder);
         }
 
-        public static PackageOperations GetInstance(string packagesFolder = "packages")
+        public static PackageOperations GetInstance(string packagesFolder = "packages", string binFolder = "bin")
         {
-            return new PackageOperations(packagesFolder);
+            return new PackageOperations(packagesFolder, binFolder);
         }
 
-        public void Install(string package, Options options)
+        public void Install(string source, Options options)
         {
-            if (package.StartsWith("http") || package.StartsWith("git"))
+            Package package = new Package();
+
+            if (source.StartsWith("http") || source.StartsWith("git"))
             {
-                GitPackageResolver gitPackageResolver = new GitPackageResolver(this.PackagesFolder, package, options);
-                gitPackageResolver.Resolve();
+                GitPackageResolver gitPackageResolver = new GitPackageResolver(this.PackagesFolder, source, options);
+                package = gitPackageResolver.Resolve();
             }
-            else if (!package.Contains("/") && !package.Contains(@"\"))
+            else if (!source.Contains("/") && !source.Contains(@"\"))
             {
-                string[] packageParts = package.Split('@');
-                package = packageParts[0];
+                string[] packageParts = source.Split('@');
+                source = packageParts[0];
 
                 if (packageParts.Length > 1)
                     options.Version = packageParts[1];
 
-                NugetPackageResolver nugetPackageResolver = new NugetPackageResolver(this.PackagesFolder, package, options);
-                nugetPackageResolver.Resolve();
+                NugetPackageResolver nugetPackageResolver = new NugetPackageResolver(this.PackagesFolder, source, options);
+                package = nugetPackageResolver.Resolve();
             }
             else
             {
-                FolderPackageResolver folderPackageResolver = new FolderPackageResolver(this.PackagesFolder, Path.GetFullPath(package), options);
-                folderPackageResolver.Resolve();
+                FolderPackageResolver folderPackageResolver = new FolderPackageResolver(this.PackagesFolder, Path.GetFullPath(source), options);
+                package = folderPackageResolver.Resolve();
             }
+
+            string executablePath = GetExecutablePath(package);
+            File.WriteAllText(executablePath, $"dotnet {Path.Combine(package.Folder.FullName, package.EntryAssemblyFileName)}");
         }
 
         public string[] List()
@@ -65,6 +77,13 @@ namespace DotNet.Globals.Core
                 throw new Exception("Packge does not exist");
 
             PackageRemover.RemoveFolder(packageFolder);
+        }
+
+        private string GetExecutablePath(Package package)
+        {
+            string executableName = Path.GetFileNameWithoutExtension(package.EntryAssemblyFileName);
+            executableName += RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".cmd" : "";
+            return Path.Combine(this.BinFolder.FullName, executableName);
         }
     }
 }
