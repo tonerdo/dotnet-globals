@@ -37,7 +37,14 @@ namespace DotNet.Globals.Cli
 
                     try
                     {
-                        packageOperations.Install(packageArgument.Value, new Options() { Folder = folderOption.Value() });
+                        string[] packageNameParts = packageArgument.Value.Split('@');
+                        string packageName = packageNameParts[0];
+                        packageOperations.Install(packageName, new Options()
+                        {
+                            Folder = folderOption.Value(),
+                            NuGetPackageSource = sourceOption.HasValue() ? sourceOption.Value() : "https://api.nuget.org/v3/index.json",
+                            Version = packageNameParts.Length > 1 ? packageNameParts[1] : null
+                        });
                         return 0;
                     }
                     catch (System.Exception ex)

@@ -37,7 +37,8 @@ namespace DotNet.Globals.Core
             }
             else if (!package.Contains("/") && !package.Contains(@"\"))
             {
-                // TODO: Nuget package
+                NugetPackageResolver nugetPackageResolver = new NugetPackageResolver(this.PackagesFolder, package, options);
+                nugetPackageResolver.Resolve();
             }
             else
             {

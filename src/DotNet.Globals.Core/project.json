@@ -5,7 +5,11 @@
   },
   "dependencies": {
       "System.Diagnostics.Process": "4.1.0",
-      "Newtonsoft.Json": "9.0.1"
+      "System.Runtime.Loader": "4.0.0",
+      "Newtonsoft.Json": "9.0.1",
+      "NuGet.Packaging.Core": "3.5.0-rc1-final",
+      "NuGet.Packaging.Core.Types": "3.5.0-rc1-final",
+      "NuGet.Protocol.Core.v3": "3.5.0-rc1-final"
   },
   "frameworks": {
     "netstandard1.6": {
