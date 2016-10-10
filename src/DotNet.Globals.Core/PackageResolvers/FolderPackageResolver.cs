@@ -13,14 +13,25 @@ namespace DotNet.Globals.Core.PackageResolvers
         protected override void Acquire()
         {
             var sourceFolder = new DirectoryInfo(this.Source);
-            FileInfo projectJson = sourceFolder.GetFiles().FirstOrDefault(f => f.Name == "project.json");
+            var globalsFolder = sourceFolder.Parent.Parent;
 
+            FileInfo projectJson = sourceFolder.GetFiles().FirstOrDefault(f => f.Name.EndsWith("project.json"));
             if (projectJson == null)
                 throw new Exception("No project.json found in source folder");
 
-            bool restore = ProcessRunner.RunProcess("dotnet", "restore", projectJson.FullName);
-            if (!restore)
-                throw new Exception("Package restore for project failed");
+            if (globalsFolder.GetFiles().FirstOrDefault(f => f.Name.EndsWith("global.json")) != null
+                && !string.IsNullOrEmpty(this.Options.Folder))
+            {
+                bool restore = ProcessRunner.RunProcess("dotnet", "restore", globalsFolder.FullName);
+                if (!restore)
+                    throw new Exception("Package restore failed for project or one of its dependencies");
+            }
+            else
+            {
+                bool restore = ProcessRunner.RunProcess("dotnet", "restore", sourceFolder.FullName);
+                if (!restore)
+                    throw new Exception("Package restore for project failed");
+            }
 
             this.Package.EntryAssemblyFileName = $"{ProjectParser.GetEntryAssemblyName(projectJson)}.dll";
             string packageName = sourceFolder.Name;
@@ -33,7 +44,7 @@ namespace DotNet.Globals.Core.PackageResolvers
                     PackageRemover.RemoveFolder(this.PackageFolder);
 
             this.PackageFolder = this.PackagesFolder.CreateSubdirectory(packageName);
-            bool build = ProcessRunner.RunProcess("dotnet", "build", projectJson.FullName,
+            bool build = ProcessRunner.RunProcess("dotnet", "build", sourceFolder.FullName,
                 "-c Release", "-f netcoreapp1.0", "-o " + this.PackageFolder.FullName);
             if (!build)
                 throw new Exception("Project compilation failed");
