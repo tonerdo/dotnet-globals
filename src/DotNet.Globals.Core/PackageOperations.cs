@@ -86,6 +86,19 @@ namespace DotNet.Globals.Core
             File.Delete(executablePath);
         }
 
+        public void Update(string package)
+        {
+            var packageFolder = this.PackagesFolder.GetDirectories().FirstOrDefault(d => d.Name == package);
+            if (packageFolder == null)
+                throw new Exception("Packge does not exist");
+
+            Package p = JsonConvert.DeserializeObject<Package>(File.ReadAllText(Path.Combine(packageFolder.FullName, "globals.json")));
+            p.Options.Version = null;
+
+            this.Uninstall(package);
+            this.Install(p.Source, p.Options);
+        }
+
         private string GetExecutablePath(Package package)
         {
             string executableName = Path.GetFileNameWithoutExtension(package.EntryAssemblyFileName);

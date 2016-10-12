@@ -96,6 +96,17 @@ namespace DotNet.Globals.Cli
                         return 1;
                     }
 
+                    try
+                    {
+                        packageOperations.Update(packageArgument.Value);
+                        Console.WriteLine($"{packageArgument.Value} updated successfully");
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Console.Error.WriteLine(ex.Message);
+                        return 1;
+                    }
+
                     return 0;
                 });
             });
