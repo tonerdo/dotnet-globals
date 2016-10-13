@@ -2,8 +2,7 @@
   "version": "1.0.0-*",
   "buildOptions": {
     "debugType": "portable",
-    "emitEntryPoint": true,
-    "outputName": "dotnet-globals"
+    "emitEntryPoint": true
   },
   "dependencies": {
       "Microsoft.Extensions.CommandLineUtils": "1.0.0",
