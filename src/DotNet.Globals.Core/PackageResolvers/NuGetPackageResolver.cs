@@ -36,7 +36,7 @@ namespace DotNet.Globals.Core.PackageResolvers
             SourceRepository sourceRepository = new SourceRepository(packageSource, providers);
             PackageMetadataResource packageMetadataResource = await sourceRepository.GetResourceAsync<PackageMetadataResource>();
 
-            IEnumerable<IPackageSearchMetadata> searchMetadata = await packageMetadataResource.GetMetadataAsync(this.Source, this.Options.PreRelease, false, logger, CancellationToken.None);
+            IEnumerable<IPackageSearchMetadata> searchMetadata = await packageMetadataResource.GetMetadataAsync(this.Source, true, false, logger, CancellationToken.None);
             if (searchMetadata.Count() == 0)
                 throw new Exception($"Unable to resolve {this.Source}");
 
