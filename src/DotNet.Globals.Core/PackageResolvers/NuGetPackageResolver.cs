@@ -66,6 +66,7 @@ namespace DotNet.Globals.Core.PackageResolvers
             string projectPath = Path.Combine(tempFolder.FullName, "project.json");
             File.AppendAllText(projectPath, json);
 
+            Reporter.Logger.LogInformation($"Installing {packageIdentity.Id}");
             bool restore = ProcessRunner.RunProcess("dotnet", "restore", projectPath, $"-s {this.Options.NuGetPackageSource}");
 
             string nugetAssemblies = Environment.GetEnvironmentVariable("HOME") ?? Environment.GetEnvironmentVariable("USERPROFILE");
@@ -110,9 +111,7 @@ namespace DotNet.Globals.Core.PackageResolvers
             this.PackageFolder = this.PackagesFolder.CreateSubdirectory(packageName);
             FileInfo[] frameworkFiles = nugetPackageAssembliesFolder.GetFiles();
             foreach (var frameworkFile in frameworkFiles)
-            {
                 frameworkFile.CopyTo(Path.Combine(this.PackageFolder.FullName, frameworkFile.Name));
-            }
         }
 
         private class Logger : ILogger

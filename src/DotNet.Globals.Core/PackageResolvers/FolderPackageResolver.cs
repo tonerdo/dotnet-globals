@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+
 using DotNet.Globals.Core.Utils;
 
 namespace DotNet.Globals.Core.PackageResolvers
@@ -18,6 +19,7 @@ namespace DotNet.Globals.Core.PackageResolvers
             if (projectJson == null)
                 throw new Exception("No project.json found in source folder");
 
+            Reporter.Logger.LogInformation("Restoring project dependencies");
             if (globalsFolder.GetFiles().FirstOrDefault(f => f.Name.EndsWith("global.json")) != null
                 && !string.IsNullOrEmpty(this.Options.Folder))
             {
@@ -32,6 +34,7 @@ namespace DotNet.Globals.Core.PackageResolvers
                     throw new Exception("Package restore for project failed");
             }
 
+            Reporter.Logger.LogSuccess("Package restore for project successful");
             this.Package.EntryAssemblyFileName = $"{ProjectParser.GetEntryAssemblyName(projectJson)}.dll";
             string packageName = sourceFolder.Name;
 
@@ -43,10 +46,13 @@ namespace DotNet.Globals.Core.PackageResolvers
                     PackageRemover.RemoveFolder(this.PackageFolder);
 
             this.PackageFolder = this.PackagesFolder.CreateSubdirectory(packageName);
+            Reporter.Logger.LogInformation("Building project");
             bool build = ProcessRunner.RunProcess("dotnet", "build", sourceFolder.FullName,
                 "-c Release", "-f netcoreapp1.0", "-o " + this.PackageFolder.FullName);
             if (!build)
-                throw new Exception("Project compilation failed");
+                throw new Exception("Project build failed");
+
+            Reporter.Logger.LogSuccess("Project build successful");
         }
     }
 }

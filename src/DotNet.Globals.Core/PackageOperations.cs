@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+using DotNet.Globals.Core.Logging;
 using DotNet.Globals.Core.PackageResolvers;
 using DotNet.Globals.Core.Utils;
 
@@ -32,8 +33,11 @@ namespace DotNet.Globals.Core
             this.BinFolder = new DirectoryInfo(binFolder);
         }
 
-        public static PackageOperations GetInstance(string packagesFolder = "packages", string binFolder = "bin")
+        private static void SetGlobalLogger(ILogger logger) => Reporter.Logger = logger;
+
+        public static PackageOperations GetInstance(ILogger logger, string packagesFolder = "packages", string binFolder = "bin")
         {
+            SetGlobalLogger(logger);
             return new PackageOperations(packagesFolder, binFolder);
         }
 
@@ -43,6 +47,7 @@ namespace DotNet.Globals.Core
 
             if (source.StartsWith("http") || source.StartsWith("git"))
             {
+                Reporter.Logger.LogInformation("Resolving package from git repo");
                 GitPackageResolver gitPackageResolver = new GitPackageResolver(this.PackagesFolder, source, options);
                 package = gitPackageResolver.Resolve();
             }
@@ -54,14 +59,19 @@ namespace DotNet.Globals.Core
                 if (packageParts.Length > 1)
                     options.Version = packageParts[1];
 
+                Reporter.Logger.LogInformation("Resolving package from NuGet");
                 NugetPackageResolver nugetPackageResolver = new NugetPackageResolver(this.PackagesFolder, source, options);
                 package = nugetPackageResolver.Resolve();
             }
             else
             {
+                Reporter.Logger.LogInformation("Resolving package from project folder");
                 FolderPackageResolver folderPackageResolver = new FolderPackageResolver(this.PackagesFolder, Path.GetFullPath(source), options);
                 package = folderPackageResolver.Resolve();
             }
+
+            Reporter.Logger.LogSuccess("Package has been resolved");
+            Reporter.Logger.LogInformation("Creating executable");
 
             string executablePath = GetExecutablePath(package);
             File.WriteAllText(executablePath, $"dotnet {Path.Combine(package.Folder.FullName, package.EntryAssemblyFileName)}");
@@ -80,6 +90,7 @@ namespace DotNet.Globals.Core
             if (packageFolder == null)
                 throw new Exception("Packge does not exist");
 
+            Reporter.Logger.LogInformation($"Removing {package}");
             Package p = JsonConvert.DeserializeObject<Package>(File.ReadAllText(Path.Combine(packageFolder.FullName, "globals.json")));
             string executablePath = GetExecutablePath(p);
             PackageRemover.RemoveFolder(packageFolder);

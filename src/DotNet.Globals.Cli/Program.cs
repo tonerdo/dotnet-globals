@@ -8,7 +8,8 @@ namespace DotNet.Globals.Cli
     {
         public static int Main(string[] args)
         {
-            PackageOperations packageOperations = PackageOperations.GetInstance();
+            ConsoleLogger logger = new ConsoleLogger();
+            PackageOperations packageOperations = PackageOperations.GetInstance(logger);
             var app = new CommandLineApplication();
             app.Name = "dotnet globals";
             app.FullName = ".NET Core Globals";
@@ -31,7 +32,7 @@ namespace DotNet.Globals.Cli
                 {
                     if (string.IsNullOrEmpty(packageArgument.Value))
                     {
-                        Console.Error.WriteLine("<PACKAGE> argument is required. Use -h|--help to see help");
+                        logger.LogError("<PACKAGE> argument is required. Use -h|--help to see help");
                         return 1;
                     }
 
@@ -42,11 +43,12 @@ namespace DotNet.Globals.Cli
                             Folder = folderOption.Value(),
                             NuGetPackageSource = sourceOption.HasValue() ? sourceOption.Value() : "https://api.nuget.org/v3/index.json"
                         });
+                        logger.LogSuccess("Package install successful");
                         return 0;
                     }
                     catch (System.Exception ex)
                     {
-                        Console.Error.WriteLine(ex.Message);
+                        logger.LogError(ex.Message);
                         return 1;
                     }
                 });
@@ -63,19 +65,19 @@ namespace DotNet.Globals.Cli
                 {
                     if (string.IsNullOrEmpty(packageArgument.Value))
                     {
-                        Console.Error.WriteLine("<PACKAGE> argument is required. Use -h|--help to see help");
+                        logger.LogError("<PACKAGE> argument is required. Use -h|--help to see help");
                         return 1;
                     }
 
                     try
                     {
                         packageOperations.Uninstall(packageArgument.Value);
-                        Console.WriteLine("Package removed successfully");
+                        logger.LogSuccess("Package removed successfully");
                         return 0;
                     }
                     catch (System.Exception ex)
                     {
-                        Console.Error.WriteLine(ex.Message);
+                        logger.LogError(ex.Message);
                         return 1;
                     }
                 });
@@ -92,18 +94,18 @@ namespace DotNet.Globals.Cli
                 {
                     if (string.IsNullOrEmpty(packageArgument.Value))
                     {
-                        Console.Error.WriteLine("<PACKAGE> argument is required. Use -h|--help to see help");
+                        logger.LogError("<PACKAGE> argument is required. Use -h|--help to see help");
                         return 1;
                     }
 
                     try
                     {
                         packageOperations.Update(packageArgument.Value);
-                        Console.WriteLine($"{packageArgument.Value} updated successfully");
+                        logger.LogSuccess($"{packageArgument.Value} updated successfully");
                     }
                     catch (System.Exception ex)
                     {
-                        Console.Error.WriteLine(ex.Message);
+                        logger.LogError(ex.Message);
                         return 1;
                     }
 
@@ -121,7 +123,7 @@ namespace DotNet.Globals.Cli
                     Console.WriteLine(packageOperations.PackagesFolder.FullName);
 
                     if (packages.Length == 0)
-                        Console.WriteLine("No packages installed");
+                        logger.LogWarning("No packages installed");
                     else
                         foreach (string package in packages)
                             Console.WriteLine("|-- {0}", package);

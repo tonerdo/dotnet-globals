@@ -16,10 +16,12 @@ namespace DotNet.Globals.Core.PackageResolvers
                 .CreateSubdirectory("dotnet-globals-" + Guid.NewGuid().ToString())
                 .CreateSubdirectory(packageName);
 
+            Reporter.Logger.LogInformation("Cloning git repository");
             bool clone = ProcessRunner.RunProcess("git", "clone", this.Source, tempFolder.FullName);
             if (!clone)
                 throw new Exception("Unable to clone repository");
 
+            Reporter.Logger.LogSuccess("Clone successful");
             this.Source = string.IsNullOrEmpty(this.Options.Folder) ? 
                 tempFolder.FullName : Path.Combine(tempFolder.FullName, this.Options.Folder);
 
