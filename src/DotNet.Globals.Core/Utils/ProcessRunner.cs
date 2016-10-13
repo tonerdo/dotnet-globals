@@ -10,9 +10,11 @@ namespace DotNet.Globals.Core.Utils
             process.StartInfo.FileName = processName;
             process.StartInfo.Arguments = string.Join(" ", arguments);
             process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.RedirectStandardOutput = true;
             process.Start();
 
-            while (!process.HasExited);
+            Reporter.Logger.LogVerbose(process.StandardOutput.ReadToEnd());
+            process.WaitForExit();
             return process.ExitCode == 0;
         }
     }
