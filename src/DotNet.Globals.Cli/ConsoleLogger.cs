@@ -5,17 +5,9 @@ namespace DotNet.Globals.Cli
 
     class ConsoleLogger : ILogger
     {
-        private void Log(string data)
-        {
-            Console.WriteLine(data);
-        }
+        private void Log(string data) => Console.WriteLine(data);
 
-        public void LogSuccess(string data)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Log(data);
-            Console.ResetColor();
-        }
+        public void LogSuccess(string data) => Log($"LOG: {data}");
 
         public void LogError(string data)
         {
@@ -24,15 +16,10 @@ namespace DotNet.Globals.Cli
             Console.ResetColor();
         }
 
-        public void LogInformation(string data) => Log(data);
+        public void LogInformation(string data) => Log($"INFO: {data}");
 
-        public void LogVerbose(string data) => Log(data);
+        public void LogVerbose(string data) { }
 
-        public void LogWarning(string data)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Log(data);
-            Console.ResetColor();
-        }
+        public void LogWarning(string data) => Log($"WARNING: {data}");
     }
 }
