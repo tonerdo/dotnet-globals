@@ -51,7 +51,7 @@ namespace DotNet.Globals.Core
                 GitPackageResolver gitPackageResolver = new GitPackageResolver(this.PackagesFolder, source, options);
                 package = gitPackageResolver.Resolve();
             }
-            else if (!source.Contains("/") && !source.Contains(@"\"))
+            else if (!source.Contains("/") && !source.Contains(@"\") && !source.StartsWith("."))
             {
                 string[] packageParts = source.Split('@');
                 source = packageParts[0];
