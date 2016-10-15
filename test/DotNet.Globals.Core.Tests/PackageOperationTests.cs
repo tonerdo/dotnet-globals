@@ -12,7 +12,9 @@ namespace DotNet.Globals.Core.Tests
     {
         public DirectoryInfo PackagesFolder { get; set; }
         public DirectoryInfo ExecutablesFolder { get; set; }
+
         private Mock<ILogger> _mockLogger;
+        private string _workspaceRoot;
 
         public PackageOperationTests()
         {
@@ -20,7 +22,9 @@ namespace DotNet.Globals.Core.Tests
                 .CreateSubdirectory(Guid.NewGuid().ToString());
             this.ExecutablesFolder = new DirectoryInfo(Path.GetTempPath())
                 .CreateSubdirectory(Guid.NewGuid().ToString());
-            _mockLogger = new Mock<ILogger>();
+
+            this._mockLogger = new Mock<ILogger>();
+            this._workspaceRoot = Environment.GetEnvironmentVariable("WORKSPACEROOT") ?? string.Empty;
         }
 
         [Fact]
@@ -70,7 +74,7 @@ namespace DotNet.Globals.Core.Tests
             PackageOperations packageOperations = PackageOperations
                 .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
 
-            packageOperations.Install("../../src/DotNet.Globals.Cli", new Options());
+            packageOperations.Install(Path.Combine(this._workspaceRoot, "../../src/DotNet.Globals.Cli"), new Options());
 
             this._mockLogger.Verify(l => l.LogInformation("Resolving package from project folder"));
             this._mockLogger.Verify(l => l.LogSuccess("Package has been resolved"));
@@ -85,7 +89,7 @@ namespace DotNet.Globals.Core.Tests
             
             Exception ex = Assert.Throws<Exception>(() =>
             {
-                packageOperations.Install(".", new Options());
+                packageOperations.Install(Path.Combine(this._workspaceRoot, "."), new Options());
             });
 
             Assert.Equal("Entry point not found in package", ex.Message);
