@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.Extensions.CommandLineUtils;
 using DotNet.Globals.Core;
 
@@ -9,7 +10,8 @@ namespace DotNet.Globals.Cli
         public static int Main(string[] args)
         {
             ConsoleLogger logger = new ConsoleLogger();
-            PackageOperations packageOperations = PackageOperations.GetInstance(logger);
+            PackageOperations packageOperations = PackageOperations.GetInstance(logger, GetApplicationFolder());
+
             var app = new CommandLineApplication();
             app.Name = "dotnet globals";
             app.FullName = ".NET Core Globals";
@@ -143,6 +145,15 @@ namespace DotNet.Globals.Cli
             {
                 return 1;
             }
+        }
+
+        private static string GetApplicationFolder()
+        {
+            string userHome = Environment.GetEnvironmentVariable("HOME") ?? Environment.GetEnvironmentVariable("USERPROFILE");
+            string applicationFolder = Path.Combine(userHome, ".dotnet-globals");
+            if (!Directory.Exists(applicationFolder))
+                Directory.CreateDirectory(applicationFolder);
+            return applicationFolder;
         }
     }
 }

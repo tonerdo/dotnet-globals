@@ -10,19 +10,14 @@ namespace DotNet.Globals.Core.Tests
 {
     public class PackageOperationTests : IDisposable
     {
-        public DirectoryInfo PackagesFolder { get; set; }
-        public DirectoryInfo ExecutablesFolder { get; set; }
-
+        private DirectoryInfo _applicationsFolder { get; set; }
         private Mock<ILogger> _mockLogger;
         private string _workspaceRoot;
 
         public PackageOperationTests()
         {
-            this.PackagesFolder = new DirectoryInfo(Path.GetTempPath())
+            this._applicationsFolder = new DirectoryInfo(Path.GetTempPath())
                 .CreateSubdirectory(Guid.NewGuid().ToString());
-            this.ExecutablesFolder = new DirectoryInfo(Path.GetTempPath())
-                .CreateSubdirectory(Guid.NewGuid().ToString());
-
             this._mockLogger = new Mock<ILogger>();
             this._workspaceRoot = Environment.GetEnvironmentVariable("WORKSPACEROOT") ?? string.Empty;
         }
@@ -31,7 +26,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestNuGetPackageInstall()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
             packageOperations.Install("DotNet.Cleaner.Tools", new Options() { NuGetPackageSource = "https://api.nuget.org/v3/index.json" });
 
@@ -44,7 +39,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestNuGetPackageWrongTargetFramework()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
             Assert.Throws<AggregateException>(() =>
             {
@@ -58,7 +53,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestNonExistingNuGetPackage()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
             Assert.Throws<AggregateException>(() =>
             {
@@ -72,7 +67,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestFolderPackageInstall()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
             packageOperations.Install(Path.Combine(this._workspaceRoot, "../../src/DotNet.Globals.Cli"), new Options());
 
@@ -85,7 +80,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestFolderPackageInstallNoEntryPoint()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
             
             Exception ex = Assert.Throws<Exception>(() =>
             {
@@ -100,7 +95,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestGitPackageInstall()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
             packageOperations.Install("git@github.com:tsolarin/dotnet-globals.git", new Options() { Folder = "src/DotNet.Globals.Cli" });
 
@@ -113,7 +108,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestGitPackageInstallNoEntryPoint()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
             Exception ex = Assert.Throws<Exception>(() =>
             {
@@ -128,7 +123,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestGitPackageInstallNoProjectJson()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
             Exception ex = Assert.Throws<Exception>(() =>
             {
@@ -143,7 +138,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestListPackagesEmpty()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
             Assert.Equal(0, packageOperations.List().Length);
         }
@@ -152,7 +147,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestListPackagesNonEmpty()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
             packageOperations.Install("DotNet.Cleaner.Tools", new Options() { NuGetPackageSource = "https://api.nuget.org/v3/index.json" });
 
@@ -164,7 +159,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestUninstallPackage()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
             packageOperations.Install("DotNet.Cleaner.Tools", new Options() { NuGetPackageSource = "https://api.nuget.org/v3/index.json" });
             packageOperations.Uninstall("DotNet.Cleaner.Tools");
@@ -177,7 +172,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestUninstallNonPackage()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
             Exception ex = Assert.Throws<Exception>(() =>
             {
@@ -191,7 +186,7 @@ namespace DotNet.Globals.Core.Tests
         public void TestUpdateNonPackage()
         {
             PackageOperations packageOperations = PackageOperations
-                .GetInstance(this._mockLogger.Object, this.PackagesFolder.FullName, this.ExecutablesFolder.FullName);
+                .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
             Exception ex = Assert.Throws<Exception>(() =>
             {
@@ -212,8 +207,7 @@ namespace DotNet.Globals.Core.Tests
 
         public void Dispose()
         {
-            this.RemoveFolder(this.PackagesFolder);
-            this.RemoveFolder(this.ExecutablesFolder);
+            this.RemoveFolder(this._applicationsFolder);
         }
     }
 }

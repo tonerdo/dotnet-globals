@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 using DotNet.Globals.Core.Logging;
@@ -17,11 +16,10 @@ namespace DotNet.Globals.Core
         public DirectoryInfo PackagesFolder { get; }
         public DirectoryInfo BinFolder { get; }
 
-        private PackageOperations(string packagesFolder, string binFolder)
+        private PackageOperations(string applicationFolder)
         {
-            Assembly asm = Assembly.GetEntryAssembly();
-            packagesFolder = Path.Combine(Path.GetDirectoryName(asm.Location), packagesFolder);
-            binFolder = Path.Combine(Path.GetDirectoryName(asm.Location), binFolder);
+            string packagesFolder = Path.Combine(applicationFolder, "packages");
+            string binFolder = Path.Combine(applicationFolder, "bin");
 
             if (!Directory.Exists(packagesFolder))
                 Directory.CreateDirectory(packagesFolder);
@@ -35,10 +33,10 @@ namespace DotNet.Globals.Core
 
         private static void SetGlobalLogger(ILogger logger) => Reporter.Logger = logger;
 
-        public static PackageOperations GetInstance(ILogger logger, string packagesFolder = "packages", string binFolder = "bin")
+        public static PackageOperations GetInstance(ILogger logger, string applicationFolder = ".")
         {
             SetGlobalLogger(logger);
-            return new PackageOperations(packagesFolder, binFolder);
+            return new PackageOperations(applicationFolder);
         }
 
         public void Install(string source, Options options)
