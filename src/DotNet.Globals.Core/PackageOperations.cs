@@ -75,6 +75,8 @@ namespace DotNet.Globals.Core
             File.WriteAllText(executablePath, $"dotnet {Path.Combine(package.Folder.FullName, package.EntryAssemblyFileName)}");
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 ProcessRunner.RunProcess("chmod", "+x", executablePath);
+
+            this.CleanUpTemp();
         }
 
         public string[] List()
@@ -113,6 +115,20 @@ namespace DotNet.Globals.Core
             string executableName = Path.GetFileNameWithoutExtension(package.EntryAssemblyFileName);
             executableName += RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".cmd" : "";
             return Path.Combine(this.BinFolder.FullName, executableName);
+        }
+
+        private void CleanUpTemp()
+        {
+            try
+            {
+                DirectoryInfo tempFolder = new DirectoryInfo(Path.GetTempPath());
+                var applicationFolders = tempFolder.GetDirectories().Where(d => d.Name.StartsWith("dotnet-globals"));
+                foreach (var folder in applicationFolders)
+                    PackageRemover.RemoveFolder(folder);
+            }
+            catch (System.Exception)
+            {
+            }
         }
     }
 }
