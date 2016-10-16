@@ -93,7 +93,7 @@ namespace DotNet.Globals.Core
             Reporter.Logger.LogInformation($"Removing {package}");
             Package p = JsonConvert.DeserializeObject<Package>(File.ReadAllText(Path.Combine(packageFolder.FullName, "globals.json")));
             string executablePath = GetExecutablePath(p);
-            PackageRemover.RemoveFolder(packageFolder);
+            FileSystemOperations.RemoveFolder(packageFolder);
             File.Delete(executablePath);
         }
 
@@ -124,7 +124,7 @@ namespace DotNet.Globals.Core
                 DirectoryInfo tempFolder = new DirectoryInfo(Path.GetTempPath());
                 var applicationFolders = tempFolder.GetDirectories().Where(d => d.Name.StartsWith("dotnet-globals"));
                 foreach (var folder in applicationFolders)
-                    PackageRemover.RemoveFolder(folder);
+                    FileSystemOperations.RemoveFolder(folder);
             }
             catch (System.Exception)
             {

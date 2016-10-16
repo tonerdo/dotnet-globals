@@ -106,7 +106,7 @@ namespace DotNet.Globals.Core.PackageResolvers
                 if (this.PackageFolder.GetFiles().Select(f => f.Name).Contains("globals.json"))
                     throw new Exception("A package with the same name already exists");
                 else
-                    PackageRemover.RemoveFolder(this.PackageFolder);
+                    FileSystemOperations.RemoveFolder(this.PackageFolder);
 
             this.PackageFolder = this.PackagesFolder.CreateSubdirectory(packageName);
             FileInfo[] frameworkFiles = nugetPackageAssembliesFolder.GetFiles();

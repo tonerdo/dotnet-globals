@@ -3,7 +3,7 @@ namespace DotNet.Globals.Core.Utils
     using System.IO;
     using System.Linq;
 
-    internal class PackageRemover
+    internal class FileSystemOperations
     {
         public static void RemoveFolder(DirectoryInfo folder)
         {
