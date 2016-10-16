@@ -97,7 +97,7 @@ namespace DotNet.Globals.Core.Tests
             PackageOperations packageOperations = PackageOperations
                 .GetInstance(this._mockLogger.Object, this._applicationsFolder.FullName);
 
-            packageOperations.Install("git@github.com:tsolarin/dotnet-globals.git", new Options() { Folder = "src/DotNet.Globals.Cli" });
+            packageOperations.Install("https://github.com/tsolarin/dotnet-globals", new Options() { Folder = "src/DotNet.Globals.Cli" });
 
             this._mockLogger.Verify(l => l.LogInformation("Resolving package from git repo"));
             this._mockLogger.Verify(l => l.LogSuccess("Package has been resolved"));
@@ -112,7 +112,7 @@ namespace DotNet.Globals.Core.Tests
 
             Exception ex = Assert.Throws<Exception>(() =>
             {
-                packageOperations.Install("git@github.com:tsolarin/dotnet-globals.git", new Options() { Folder = "src/DotNet.Globals.Core" });
+                packageOperations.Install("https://github.com/tsolarin/dotnet-globals", new Options() { Folder = "src/DotNet.Globals.Core" });
             });
 
             Assert.Equal("Entry point not found in package", ex.Message);
@@ -127,7 +127,7 @@ namespace DotNet.Globals.Core.Tests
 
             Exception ex = Assert.Throws<Exception>(() =>
             {
-                packageOperations.Install("git@github.com:tsolarin/dotnet-globals.git", new Options());
+                packageOperations.Install("https://github.com/tsolarin/dotnet-globals", new Options());
             });
 
             Assert.Equal("No project.json found in source folder", ex.Message);
