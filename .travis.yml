@@ -13,6 +13,7 @@ addons:
     - libunwind8
     - zlib1g
     - git
+mono: none
 os:
   linux
   osx
