@@ -74,7 +74,7 @@ namespace DotNet.Globals.Core.PackageResolvers
             JObject projectJsonLock = JObject.Parse(File.ReadAllText(Path.Combine(tempFolder.FullName, "project.lock.json")));
 
             string nugetAssemblies = ((JObject)projectJsonLock["packageFolders"]).Properties().Select(p => p.Name).FirstOrDefault();
-            nugetAssemblies = Path.Combine(nugetAssemblies, packageIdentity.Id, packageIdentity.Version.ToFullString(),
+            nugetAssemblies = Path.Combine(nugetAssemblies, packageIdentity.Id.ToLower(), packageIdentity.Version.ToFullString(),
                 "lib", "netcoreapp1.0");
 
             return new DirectoryInfo(nugetAssemblies);
