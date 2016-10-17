@@ -14,6 +14,8 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 
+using Newtonsoft.Json.Linq;
+
 namespace DotNet.Globals.Core.PackageResolvers
 {
     internal class NugetPackageResolver : PackageResolver
@@ -69,8 +71,10 @@ namespace DotNet.Globals.Core.PackageResolvers
             Reporter.Logger.LogInformation($"Installing {packageIdentity.Id}");
             bool restore = ProcessRunner.RunProcess("dotnet", "restore", projectPath, $"-s {this.Options.NuGetPackageSource}");
 
-            string nugetAssemblies = Environment.GetEnvironmentVariable("HOME") ?? Environment.GetEnvironmentVariable("USERPROFILE");
-            nugetAssemblies = Path.Combine(nugetAssemblies, ".nuget", "packages", packageIdentity.Id, packageIdentity.Version.ToFullString(),
+            JObject projectJsonLock = JObject.Parse(File.ReadAllText(Path.Combine(tempFolder.FullName, "project.lock.json")));
+
+            string nugetAssemblies = ((JObject)projectJsonLock["packageFolders"]).Properties().Select(p => p.Name).FirstOrDefault();
+            nugetAssemblies = Path.Combine(nugetAssemblies, packageIdentity.Id, packageIdentity.Version.ToFullString(),
                 "lib", "netcoreapp1.0");
 
             return new DirectoryInfo(nugetAssemblies);
