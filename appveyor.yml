@@ -4,12 +4,9 @@ configuration:
   - Release
 environment:
   WORKSPACEROOT: test\DotNet.Globals.Core.Tests
-before_build:
-  - appveyor-retry dotnet restore -v Minimal
 build_script:
-  - dotnet build "src\DotNet.Globals.Core" -c %CONFIGURATION%
-  - dotnet build "src\DotNet.Globals.Cli" -c %CONFIGURATION%
+  - echo "Building for %CONFIGURATION%"
 test_script:
-  - dotnet test "test\DotNet.Globals.Core.Tests" -c %CONFIGURATION%
+  - ps: .\build.ps1 %CONFIGURATION%
 cache:
   - '%USERPROFILE%\.nuget\packages'
