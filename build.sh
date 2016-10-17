@@ -2,8 +2,18 @@
 
 set -e
 
+if [[ !$1 ]]; then
+    CONFIGURATION="Debug"
+fi
+
+if [[ $1 ]]; then
+    CONFIGURATION=$1
+fi
+
 dotnet restore
 
 export WORKSPACEROOT="./test/DotNet.Globals.Core.Tests"
 
-dotnet test $WORKSPACEROOT -c Release -f netcoreapp1.0
+dotnet build "./src/DotNet.Globals.Core" -c $CONFIGURATION
+dotnet build "./src/DotNet.Globals.Cli" -c $CONFIGURATION
+dotnet test $WORKSPACEROOT -c $CONFIGURATION
