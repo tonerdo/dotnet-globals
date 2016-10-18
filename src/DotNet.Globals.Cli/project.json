@@ -1,8 +1,11 @@
 {
-  "version": "1.0.0-*",
+  "version": "1.0.0-rc1",
   "buildOptions": {
     "debugType": "portable",
     "emitEntryPoint": true
+  },
+  "publishOptions": {
+      "includeFiles": ["./dotnet-globals"]
   },
   "dependencies": {
       "Microsoft.Extensions.CommandLineUtils": "1.0.0",
