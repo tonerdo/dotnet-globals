@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-dotnet ./DotNet.Globals.Cli.dll
+
+dotnet /usr/local/dotnet-globals/1.0.0-rc1/DotNet.Globals.Cli.dll
