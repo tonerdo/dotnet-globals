@@ -7,8 +7,7 @@
   "dependencies": {
       "Microsoft.Extensions.CommandLineUtils": "1.0.0",
       "DotNet.Globals.Core": {
-          "target": "project",
-          "version": "1.0.0-*"
+          "target": "project"
       }
   },
   "frameworks": {
