@@ -5,7 +5,7 @@
     "emitEntryPoint": true
   },
   "publishOptions": {
-      "includeFiles": ["./dotnet-globals"]
+      "includeFiles": ["./dotnet-globals", "./dotnet-globals.bat"]
   },
   "dependencies": {
       "Microsoft.Extensions.CommandLineUtils": "1.0.0",
