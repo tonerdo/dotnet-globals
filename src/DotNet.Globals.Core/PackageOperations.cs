@@ -72,7 +72,7 @@ namespace DotNet.Globals.Core
             Reporter.Logger.LogInformation("Creating executable");
 
             string executablePath = GetExecutablePath(package);
-            File.WriteAllText(executablePath, $"dotnet {Path.Combine(package.Folder.FullName, package.EntryAssemblyFileName)}");
+            File.WriteAllText(executablePath, GetExecutableContent(package));
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 ProcessRunner.RunProcess("chmod", "+x", executablePath);
 
@@ -115,6 +115,20 @@ namespace DotNet.Globals.Core
             string executableName = Path.GetFileNameWithoutExtension(package.EntryAssemblyFileName);
             executableName += RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".cmd" : "";
             return Path.Combine(this.BinFolder.FullName, executableName);
+        }
+
+        private string GetExecutableContent(Package package)
+        {
+            string executableContent = string.Empty;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                executableContent += $"dotnet {Path.Combine(package.Folder.FullName, package.EntryAssemblyFileName)} %* \n";
+            else
+            {
+                executableContent += "#!/usr/bin/env bash \n";
+                executableContent += $"dotnet {Path.Combine(package.Folder.FullName, package.EntryAssemblyFileName)} \"$@\" \n";
+            }
+
+            return executableContent;
         }
 
         private void CleanUpTemp()
