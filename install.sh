@@ -2,35 +2,38 @@
 
 echo "Installing dotnet-globals..."
 
-application_folder="/usr/local/dotnet-globals"
+application_folder="/usr/local/"
 version="1.0.1-rc1"
-version_folder="$application_folder/$version"
+temp_file="/tmp/dotnet-globals.tar.gz"
+unzipped_folder="/tmp/dotnet-globals"
 
-if [ ! -d $application_folder ]; then
-  mkdir $application_folder
+if [ -f $temp_file ]; then
+  rm $temp_file
 fi
 
-if [ -d $version_folder ]; then
-  echo "dotnet-globals $version already installed"
-  exit
+if [ -d $unzipped_folder ]; then
+  rm -rf $unzipped_folder
 fi
 
 download_uri=https://github.com/tsolarin/dotnet-globals/releases/download/v$version/dotnet-globals.tar.gz
-download_file="$application_folder/dotnet-globals.tar.gz"
+download_file=$temp_file
 
 echo "Downloading from $download_uri..."
 
 curl -o $download_file -L $download_uri
-tar -xvzf $download_file -C $application_folder
+tar -xvzf $download_file -C /tmp
 
-unzipped_folder="$application_folder/dotnet-globals"
-mv $unzipped_folder $version_folder
+if [ -d "$application_folder/dotnet-globals" ]; then
+  rm -rf "$application_folder/dotnet-globals"
+fi
+
+mv $unzipped_folder $application_folder
 
 symlink="/usr/local/bin/dotnet-globals"
 if [ -f $symlink ]; then
   rm $symlink
 fi
 
-ln -s "$version_folder/dotnet-globals" /usr/local/bin
+ln -s "$application_folder/dotnet-globals/dotnet-globals" /usr/local/bin
 
 echo "Installation complete. Add $HOME/.dotnet-globals/bin to your PATH"
