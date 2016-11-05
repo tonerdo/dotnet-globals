@@ -21,7 +21,7 @@ download_file=$temp_file
 echo "Downloading from $download_uri..."
 
 curl -o $download_file -L $download_uri
-tar -xvzf $download_file -C /tmp
+tar -xvf $download_file -C /tmp
 
 if [ -d "$application_folder/dotnet-globals" ]; then
   rm -rf "$application_folder/dotnet-globals"
